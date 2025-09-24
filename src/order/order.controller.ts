@@ -31,4 +31,9 @@ export class OrderController {
   remove(@Param('id') id: string) {
     return this.orderService.remove(+id);
   }
+
+  @Post('place')
+  placeOrder(@Body() createOrderDto: CreateOrderDto) {
+    return this.orderService.placeOrder(createOrderDto);
+  }
 }

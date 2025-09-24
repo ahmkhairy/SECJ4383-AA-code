@@ -23,4 +23,9 @@ export class OrderService {
   remove(id: number) {
     return `This action removes a #${id} order`;
   }
+
+  placeOrder(createOrderDto: CreateOrderDto) {
+    // Implement order placement logic here
+    return { message: 'Order placed successfully', order: createOrderDto };
+  }
 }

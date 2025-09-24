@@ -23,4 +23,12 @@ export class InvoiceService {
   remove(id: number) {
     return `This action removes a #${id} invoice`;
   }
+
+  printOrderInvoice(id: number) {
+    return `Printing invoice for order #${id}`;
+  }
+
+  printAllInvoices() {
+    return 'Printing all invoices';
+  }
 }

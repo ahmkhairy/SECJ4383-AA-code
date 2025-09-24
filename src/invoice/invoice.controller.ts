@@ -31,4 +31,14 @@ export class InvoiceController {
   remove(@Param('id') id: string) {
     return this.invoiceService.remove(+id);
   }
+
+  @Get('print/:id')
+  printOrderInvoice(@Param('id') id: string) {
+    return this.invoiceService.printOrderInvoice(+id);
+  }
+
+  @Get('print')
+  printAllInvoices() {
+    return this.invoiceService.printAllInvoices();
+  }
 }
