@@ -16,7 +16,10 @@ export class ManagemenuController {
   findAll() {
     return this.managemenuService.findAll();
   }
-
+@Get('dishes')
+  findAlldishes() {
+    return this.managemenuService.findAlldishes();
+  }
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.managemenuService.findOne(+id);
@@ -30,5 +33,15 @@ export class ManagemenuController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.managemenuService.remove(+id);
+  }
+
+  @Get('track-order/:orderId')
+  trackOrder(@Param('orderId') orderId: string) {
+    return this.managemenuService.trackOrder(+orderId);
+  }
+
+  @Post('dish')
+  createDish(@Body() createDishDto: any) {
+    return this.managemenuService.createDish(createDishDto);
   }
 }
