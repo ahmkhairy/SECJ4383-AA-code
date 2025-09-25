@@ -1,7 +1,9 @@
+
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { InvoiceService } from './invoice.service';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
+import { InvoiceId } from './entities/invoice.entity';
 
 @Controller('invoice')
 export class InvoiceController {
@@ -19,22 +21,23 @@ export class InvoiceController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.invoiceService.findOne(+id);
+    return this.invoiceService.findOne(new InvoiceId(+id));
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateInvoiceDto: UpdateInvoiceDto) {
-    return this.invoiceService.update(+id, updateInvoiceDto);
+    return this.invoiceService.update(new InvoiceId(+id), updateInvoiceDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.invoiceService.remove(+id);
+    this.invoiceService.remove(new InvoiceId(+id));
+    return { message: 'Invoice removed' };
   }
 
   @Get('print/:id')
   printOrderInvoice(@Param('id') id: string) {
-    return this.invoiceService.printOrderInvoice(+id);
+    return this.invoiceService.printOrderInvoice(new InvoiceId(+id));
   }
 
   @Get('print')

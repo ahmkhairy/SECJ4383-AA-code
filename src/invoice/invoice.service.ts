@@ -1,34 +1,55 @@
-import { Injectable } from '@nestjs/common';
+
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
+import { Invoice, InvoiceId } from './entities/invoice.entity';
 
 @Injectable()
 export class InvoiceService {
-  create(createInvoiceDto: CreateInvoiceDto) {
-    return 'This action adds a new invoice';
+  private invoices: Invoice[] = [];
+  private nextId = 1;
+
+  create(createInvoiceDto: CreateInvoiceDto): Invoice {
+    const invoice = new Invoice(
+      new InvoiceId(this.nextId++),
+      createInvoiceDto.amount,
+      createInvoiceDto.description,
+    );
+    this.invoices.push(invoice);
+    return invoice;
   }
 
-  findAll() {
-    return `This action returns all invoice`;
+  findAll(): Invoice[] {
+    return this.invoices;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} invoice`;
+  findOne(id: InvoiceId): Invoice {
+    const invoice = this.invoices.find(inv => inv.id.value === id.value);
+    if (!invoice) throw new NotFoundException('Invoice not found');
+    return invoice;
   }
 
-  update(id: number, updateInvoiceDto: UpdateInvoiceDto) {
-    return `This action updates a #${id} invoice`;
+  update(id: InvoiceId, updateInvoiceDto: UpdateInvoiceDto): Invoice {
+    const invoice = this.findOne(id);
+    invoice.amount = updateInvoiceDto.amount ?? invoice.amount;
+    invoice.description = updateInvoiceDto.description ?? invoice.description;
+    return invoice;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} invoice`;
+  remove(id: InvoiceId): void {
+    const index = this.invoices.findIndex(inv => inv.id.value === id.value);
+    if (index === -1) throw new NotFoundException('Invoice not found');
+    this.invoices.splice(index, 1);
   }
 
-  printOrderInvoice(id: number) {
-    return `Printing invoice for order #${id}`;
+  printOrderInvoice(id: InvoiceId): string {
+    const invoice = this.findOne(id);
+    return `Invoice #${invoice.id.value}: ${invoice.description}, Amount: ${invoice.amount}`;
   }
 
-  printAllInvoices() {
-    return 'Printing all invoices';
+  printAllInvoices(): string[] {
+    return this.invoices.map(
+      inv => `Invoice #${inv.id.value}: ${inv.description}, Amount: ${inv.amount}`,
+    );
   }
 }
